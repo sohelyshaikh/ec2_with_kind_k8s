@@ -31,6 +31,7 @@ resource "aws_instance" "my_amazon" {
   subnet_id                   = aws_subnet.public_subnet.id
   security_groups             = [aws_security_group.host_sg.id]
   associate_public_ip_address = true
+  iam_instance_profile        = aws_iam_instance_profile.ec2_profile.name
 
   tags = {
     "Name" = "Linux Host Machine"
