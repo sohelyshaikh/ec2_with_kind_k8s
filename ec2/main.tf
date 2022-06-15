@@ -26,15 +26,16 @@ resource "aws_subnet" "public_subnet" {
 
 resource "aws_instance" "my_amazon" {
   ami                         = data.aws_ami.latest_amazon_linux.id
-  instance_type               = "t2.micro"
+  instance_type               = "t2.medium"
   key_name                    = aws_key_pair.sohel_key.key_name
   subnet_id                   = aws_subnet.public_subnet.id
   security_groups             = [aws_security_group.host_sg.id]
   associate_public_ip_address = true
+  user_data = "${file("docker.sh")}"
   //iam_instance_profile        = aws_iam_instance_profile.ec2_profile.name  -> Access to iam roles not allowed
 
   tags = {
-    "Name" = "Linux Host Machine"
+    "Name" = "Linux K8s Host"
   }
 
 }
@@ -61,39 +62,7 @@ resource "aws_security_group" "host_sg" {
     cidr_blocks      = ["0.0.0.0/0"]
     ipv6_cidr_blocks = ["::/0"]
   }
-  ingress {
-    description      = "http from everywhere"
-    from_port        = 8080
-    to_port          = 8080
-    protocol         = "tcp"
-    cidr_blocks      = ["0.0.0.0/0"]
-    ipv6_cidr_blocks = ["::/0"]
-  }
-  ingress {
-    description      = "http from everywhere"
-    from_port        = 8081
-    to_port          = 8081
-    protocol         = "tcp"
-    cidr_blocks      = ["0.0.0.0/0"]
-    ipv6_cidr_blocks = ["::/0"]
-  }
-  ingress {
-    description      = "http from everywhere"
-    from_port        = 8082
-    to_port          = 8082
-    protocol         = "tcp"
-    cidr_blocks      = ["0.0.0.0/0"]
-    ipv6_cidr_blocks = ["::/0"]
-  }
-  ingress {
-    description      = "http from everywhere"
-    from_port        = 8083
-    to_port          = 8083
-    protocol         = "tcp"
-    cidr_blocks      = ["0.0.0.0/0"]
-    ipv6_cidr_blocks = ["::/0"]
-  }
-
+  
   egress {
     from_port        = 0
     to_port          = 0
@@ -134,4 +103,13 @@ resource "aws_route_table" "host_rt" {
 resource "aws_route_table_association" "a" {
   subnet_id      = aws_subnet.public_subnet.id
   route_table_id = aws_route_table.host_rt.id
+}
+
+resource "aws_ecr_repository" "ecr_repo" {
+  name                 = "docker_ecr"
+  image_tag_mutability = "MUTABLE"
+
+  image_scanning_configuration {
+    scan_on_push = true
+  }
 }
