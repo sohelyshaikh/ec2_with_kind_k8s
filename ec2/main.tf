@@ -31,7 +31,17 @@ resource "aws_instance" "my_amazon" {
   subnet_id                   = aws_subnet.public_subnet.id
   security_groups             = [aws_security_group.host_sg.id]
   associate_public_ip_address = true
-  user_data = "${file("docker.sh")}"
+  # provisioner "file" {
+  #   source     = "kind.yaml"
+  #   destination = "/home/ec2-user/kind.yaml"
+  #   connection {
+  #   type     = "ssh"
+  #   user     = "root"
+  #   host = self.public_ip
+  #   host_key = file("/home/ec2-user/.ssh/sohel_key.pub")
+  # }
+  # } -->> Not working, shows ssh authentication failed, handhsake failed, key mismatch
+  user_data                   = "${file("docker.sh")}"
   //iam_instance_profile        = aws_iam_instance_profile.ec2_profile.name  -> Access to iam roles not allowed
 
   tags = {
@@ -62,7 +72,7 @@ resource "aws_security_group" "host_sg" {
     cidr_blocks      = ["0.0.0.0/0"]
     ipv6_cidr_blocks = ["::/0"]
   }
-  
+
   egress {
     from_port        = 0
     to_port          = 0
