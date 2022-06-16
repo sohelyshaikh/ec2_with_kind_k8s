@@ -1,3 +1,5 @@
+# kubectl create secret generic secret-registry   --from-file=.dockerconfigjson=/home/ec2-user/.docker/config.json   --type=kubernetes.io/dockerconfigjson
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
