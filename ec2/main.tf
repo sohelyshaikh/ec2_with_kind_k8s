@@ -41,7 +41,7 @@ resource "aws_instance" "my_amazon" {
   #   host_key = file("/home/ec2-user/.ssh/sohel_key.pub")
   # }
   # } -->> Not working, shows ssh authentication failed, handhsake failed, key mismatch
-  user_data                   = "${file("docker.sh")}"
+  user_data = file("docker.sh")
   //iam_instance_profile        = aws_iam_instance_profile.ec2_profile.name  -> Access to iam roles not allowed
 
   tags = {
@@ -122,4 +122,8 @@ resource "aws_ecr_repository" "ecr_repo" {
   image_scanning_configuration {
     scan_on_push = true
   }
+}
+
+output "public_ip"{
+  value = aws_instance.my_amazon.public_ip
 }
