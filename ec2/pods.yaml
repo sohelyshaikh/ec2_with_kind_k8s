@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata: 
+  name: my-app-cats
+  labels:
+    app: my-app-cats
+spec: 
+  containers:
+  - name: my-app-cats
+    image: 700066115436.dkr.ecr.us-east-1.amazonaws.com/docker_ecr:cats
+    ports:
+    - containerPort: 80
