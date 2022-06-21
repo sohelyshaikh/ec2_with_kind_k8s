@@ -1,3 +1,4 @@
+# 700066115436.dkr.ecr.us-east-1.amazonaws.com/docker_ecr:catsv1
 # kubectl create secret generic secret-registry   --from-file=.dockerconfigjson=/home/ec2-user/.docker/config.json   --type=kubernetes.io/dockerconfigjson
 ---
 apiVersion: apps/v1
@@ -10,17 +11,17 @@ spec:
   replicas: 2
   selector:
     matchLabels:
-      app: my-app
+      app: my-app-cats
   template:
     metadata:
       labels:
-        app: my-app
+        app: my-app-cats
     spec:
       imagePullSecrets:
       - name: secret-registry
       containers:
-      - name: my-app
-        image: 700066115436.dkr.ecr.us-east-1.amazonaws.com/docker_ecr:cats
+      - name: my-app-cats
+        image: 700066115436.dkr.ecr.us-east-1.amazonaws.com/docker_ecr:catsv1
         #image: 046402772087.dkr.ecr.us-east-1.amazonaws.com/my-nginx:latest
         imagePullPolicy: Always
         ports:

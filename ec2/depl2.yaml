@@ -19,7 +19,7 @@ spec:
       - name: secret-registry
       containers:
       - name: my-app-dogs
-        image: 700066115436.dkr.ecr.us-east-1.amazonaws.com/docker_ecr:dogs
+        image: 700066115436.dkr.ecr.us-east-1.amazonaws.com/docker_ecr:dogsv1
         #image: 046402772087.dkr.ecr.us-east-1.amazonaws.com/my-nginx:latest
         imagePullPolicy: Always
         ports:
