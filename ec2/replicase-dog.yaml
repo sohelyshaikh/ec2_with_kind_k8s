@@ -18,5 +18,6 @@ spec:
       containers:
         - name: my-app-cats
           image: 700066115436.dkr.ecr.us-east-1.amazonaws.com/ecr_dogs:dogsv1
+          # image: 700066115436.dkr.ecr.us-east-1.amazonaws.com/ecr_dogs:dogsv2 --> for version 2
           ports:
             - containerPort: 80
