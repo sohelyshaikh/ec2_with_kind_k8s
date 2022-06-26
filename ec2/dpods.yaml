@@ -6,8 +6,8 @@ metadata:
     app: my-app-dogs
 spec: 
   containers:
-  - name: my-app-dogss
-    image: 700066115436.dkr.ecr.us-east-1.amazonaws.com/docker_ecr:dogs
+  - name: my-app-dogs
+    image: 700066115436.dkr.ecr.us-east-1.amazonaws.com/ecr_dogs:dogsv1
     ports:
     - containerPort: 80
     

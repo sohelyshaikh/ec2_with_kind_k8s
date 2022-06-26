@@ -1,5 +1,6 @@
 # 700066115436.dkr.ecr.us-east-1.amazonaws.com/docker_ecr:catsv1
 # kubectl create secret generic secret-registry   --from-file=.dockerconfigjson=/home/ec2-user/.docker/config.json   --type=kubernetes.io/dockerconfigjson
+# aws ecr get-login-password --region us-east-1 | docker login -u AWS --password-stdin 700066115436.dkr.ecr.us-east-1.amazonaws.com
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -8,7 +9,7 @@ metadata:
   labels:
     app: my-app
 spec:
-  replicas: 2
+  replicas: 3
   selector:
     matchLabels:
       app: my-app-cats
@@ -21,7 +22,7 @@ spec:
       - name: secret-registry
       containers:
       - name: my-app-cats
-        image: 700066115436.dkr.ecr.us-east-1.amazonaws.com/docker_ecr:catsv1
+        image: 700066115436.dkr.ecr.us-east-1.amazonaws.com/ecr_cats:catsv1
         #image: 046402772087.dkr.ecr.us-east-1.amazonaws.com/my-nginx:latest
         imagePullPolicy: Always
         ports:

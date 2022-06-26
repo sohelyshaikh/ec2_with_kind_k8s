@@ -31,17 +31,8 @@ resource "aws_instance" "my_amazon" {
   subnet_id                   = aws_subnet.public_subnet.id
   security_groups             = [aws_security_group.host_sg.id]
   associate_public_ip_address = true
-  # provisioner "file" {
-  #   source     = "kind.yaml"
-  #   destination = "/home/ec2-user/kind.yaml"
-  #   connection {
-  #   type     = "ssh"
-  #   user     = "root"
-  #   host = self.public_ip
-  #   host_key = file("/home/ec2-user/.ssh/sohel_key.pub")
-  # }
-  # } -->> Not working, shows ssh authentication failed, handhsake failed, key mismatch
-  user_data = file("docker.sh")
+  iam_instance_profile        = "LabInstanceProfile"
+  user_data                   = file("docker.sh")
   //iam_instance_profile        = aws_iam_instance_profile.ec2_profile.name  -> Access to iam roles not allowed
 
   tags = {
@@ -68,6 +59,22 @@ resource "aws_security_group" "host_sg" {
     description      = "http from everywhere"
     from_port        = 80
     to_port          = 80
+    protocol         = "tcp"
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
+  }
+  ingress {
+    description      = "k8s"
+    from_port        = 30001
+    to_port          = 30001
+    protocol         = "tcp"
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
+  }
+  ingress {
+    description      = "k8s"
+    from_port        = 30000
+    to_port          = 30000
     protocol         = "tcp"
     cidr_blocks      = ["0.0.0.0/0"]
     ipv6_cidr_blocks = ["::/0"]
@@ -115,8 +122,17 @@ resource "aws_route_table_association" "a" {
   route_table_id = aws_route_table.host_rt.id
 }
 
-resource "aws_ecr_repository" "ecr_repo" {
-  name                 = "docker_ecr"
+
+resource "aws_ecr_repository" "ecr_repo_cats" {
+  name                 = "ecr_cats"
+  image_tag_mutability = "MUTABLE"
+
+  image_scanning_configuration {
+    scan_on_push = true
+  }
+}
+resource "aws_ecr_repository" "ecr_repo_dogs" {
+  name                 = "ecr_dogs"
   image_tag_mutability = "MUTABLE"
 
   image_scanning_configuration {
@@ -124,6 +140,6 @@ resource "aws_ecr_repository" "ecr_repo" {
   }
 }
 
-output "public_ip"{
+output "public_ip" {
   value = aws_instance.my_amazon.public_ip
 }

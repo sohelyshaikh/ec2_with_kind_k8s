@@ -17,6 +17,6 @@ spec:
     spec: 
       containers:
         - name: my-app-cats
-          image: 700066115436.dkr.ecr.us-east-1.amazonaws.com/docker_ecr:cats
+          image: 700066115436.dkr.ecr.us-east-1.amazonaws.com/docker_ecr:catsv1
           ports:
             - containerPort: 80
